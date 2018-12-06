@@ -39,9 +39,9 @@ Vue.component('message-form', {
                 messageApi.update({id: this.id}, message).then(result =>
                     result.json().then(data => {
                         var index = getIndex(this.messages, data.id);
-                        this.messages.splice(index,1,data);
-                        this.text=''
-                        this.id=''
+                        this.messages.splice(index, 1, data);
+                        this.text = ''
+                        this.id = ''
                     })
                 )
             } else {
@@ -58,7 +58,7 @@ Vue.component('message-form', {
 
 
 Vue.component('message-row', {
-    props: ['message', 'editMethod','messages'],
+    props: ['message', 'editMethod', 'messages'],
     template: '<div>' +
         '<i>({{ message.id }})</i>{{ message.text }}' +
         '<span style="position: absolute; right: 0 ">' +
@@ -72,11 +72,11 @@ Vue.component('message-row', {
             this.editMethod(this.message);
         },
         del: function () {
-           messageApi.remove({id: this.message.id}).then(result => {
-               if(result.ok){
-                   this.messages.splice(this.messages.indexOf(this.message),1)
-               }
-           })
+            messageApi.remove({id: this.message.id}).then(result => {
+                if (result.ok) {
+                    this.messages.splice(this.messages.indexOf(this.message), 1)
+                }
+            })
         }
     }
 });
@@ -92,17 +92,10 @@ Vue.component('messages-list', {
     template:
         '<div style="position: relative; width: 300px;">' +
         '<message-form :messages="messages" :messageAttr="message"/>' +
-        '<message-row v-for="message in messages" :key="message.id" :message="message"'+
-':editMethod="editMethod" :messages="messages"/>'
+        '<message-row v-for="message in messages" :key="message.id" :message="message"' +
+        ':editMethod="editMethod" :messages="messages"/>'
         + '</div>',
-    created: function () {
-        messageApi.get().then(result =>
-            result.json().then(data =>
-                data.forEach(message => this.messages.push(message)
-                )
-            )
-        )
-    },
+
     methods: {
         editMethod: function (message) {
             this.message = message;
@@ -113,8 +106,24 @@ Vue.component('messages-list', {
 
 var app = new Vue({
     el: '#app',
-    template: '<messages-list :messages="messages"/>',
+    template:
+        '<div>' +
+        '<div v-if="!profile">You need authorization, please follow <a href="/login">Google</a></div>' +
+        '<div v-else>' +
+        '<messages-list :messages="messages"/>' +
+        '</div>' +
+        '</div>',
+
     data: {
-        messages: []
-    }
+        messages: frontendData.messages,
+        profile: frontendData.profile
+    },
+    created: function () {
+        /* messageApi.get().then(result =>
+             result.json().then(data =>
+                 data.forEach(message => this.messages.push(message)
+                 )
+             )
+         )*/
+    },
 });
