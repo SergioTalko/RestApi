@@ -109,7 +109,8 @@ var app = new Vue({
     template:
         '<div>' +
         '<div v-if="!profile">You need authorization, please follow <a href="/login">Google</a></div>' +
-        '<div v-else>' +
+        '<div v-else >' +
+        '<div>{{profile.name}}&nbsp;<a href="/logout">Logout</a> </div>' +
         '<messages-list :messages="messages"/>' +
         '</div>' +
         '</div>',
